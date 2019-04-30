@@ -12,20 +12,23 @@ import errno
 import glob
 import os
 import os.path
+import posixpath
 import shlex
 import shutil
 import stat
 import subprocess
 import sys
+import tarfile
 import tempfile
 import time
-try:
-    from urllib.request import urlopen
-except ImportError:
+
+python2 = (2,) <= sys.version_info < (3,)
+python3 = (3,) <= sys.version_info
+
+if python2:
     from urllib2 import urlopen
-
-
-py3 = sys.version_info[0] == 3
+else:
+    from urllib.request import urlopen
 
 
 class ExitError(Exception):
@@ -74,8 +77,13 @@ platforms = collections.OrderedDict((
     (macos, 'darwin'),
 ))
 
+platform_names = {
+    windows: 'Windows',
+    linux: 'Linux',
+    macos: 'macOS',
+}
 
-default_pre_requirements = ['pip', 'setuptools', 'pip-tools']
+default_pre_requirements = ['pip', 'setuptools', 'pip-tools', 'romp']
 
 
 def get_platform():
@@ -306,7 +314,7 @@ def windows_create(group, configuration):
         ],
         cwd=configuration.project_root,
     )
-    if py3:
+    if python3:
         python_path = python_path.decode()
     python_path = python_path.strip()
 
@@ -553,6 +561,81 @@ def pick(destination, group, configuration):
     shutil.copyfile(source, destination)
 
 
+# TODO: CAMPid 0743105874017581374310081
+def make_remote_lock_archive(archive_path, configuration):
+    root = configuration.project_root
+
+    with tarfile.open(name=archive_path, mode='w') as archive:
+        for pattern in configuration.remotelock_paths:
+            for path in glob.glob(os.path.join(root, pattern)):
+                archive_name = os.path.relpath(path, root)
+                archive.add(path, arcname=archive_name)
+
+
+# https://www.oreilly.com/library/view/python-cookbook/0596001673/ch04s16.html
+def splitall(path):
+    allparts = []
+    while 1:
+        parts = os.path.split(path)
+        if parts[0] == path:  # sentinel for absolute paths
+            allparts.insert(0, parts[0])
+            break
+        elif parts[1] == path: # sentinel for relative paths
+            allparts.insert(0, parts[1])
+            break
+        else:
+            path = parts[0]
+            allparts.insert(0, parts[1])
+    return allparts
+
+
+def ensure_posixpath(path):
+    return posixpath.join(*splitall(path))
+
+
+def remotelock(configuration):
+    directory = tempfile.mkdtemp()
+
+    try:
+        archive_path = os.path.join(directory, 'archive.tar.gz')
+        artifact_path = os.path.join(directory, 'artifact.zip')
+
+        make_remote_lock_archive(
+            archive_path=archive_path,
+            configuration=configuration,
+        )
+
+        version = configuration.python_identifier.romp_version()
+        architecture = configuration.python_identifier.romp_architecture()
+
+        artifact_paths = ensure_posixpath(os.path.join(
+            configuration.requirements_path,
+            '*.txt',
+        ))
+
+        check_call(
+            [
+                os.path.join(configuration.resolved_venv_common_bin(), 'romp'),
+                '--command', './{} lock'.format(os.path.basename(__file__)),
+                '--platform', 'Windows',
+                '--interpreter', 'CPython',
+                '--version', version,
+                '--architecture', architecture,
+                # '--include', 'Windows', 'CPython', version, 'x86',
+                '--include', 'Linux', 'CPython', version, 'x86_64',
+                '--include', 'macOS', 'CPython', version, 'x86_64',
+                '--archive-file', archive_path,
+                '--artifact-paths', artifact_paths,
+                '--artifact', artifact_path,
+            ]
+        )
+
+        with tarfile.open(artifact_path, mode='r:gz') as tar:
+            tar.extractall(path=configuration.project_root)
+    finally:
+        rmtree(directory)
+
+
 def add_group_option(parser, default):
     parser.add_argument(
         '--group',
@@ -588,7 +671,7 @@ class PythonIdentifier:
         if split == bit_split:
             bit_width = int(bit_width)
         else:
-            bit_width = None
+            bit_width = 64
 
         version_string = version_string.strip()
         if version_string == '':
@@ -623,6 +706,22 @@ class PythonIdentifier:
             command.append(version)
 
         return command
+
+    def for_romp(self, platform):
+        return '{}-{}-x{}'.format(
+            platform_names[platform],
+            self.dotted_version(places=2),
+            self.bit_width,
+        )
+
+    def romp_version(self):
+        return self.dotted_version(places=2)
+
+    def romp_architecture(self):
+        return {
+            32: 'x86',
+            64: 'x86_64',
+        }[self.bit_width]
 
 
 boolean_string_pairs = (
@@ -664,6 +763,13 @@ class Configuration:
         'dist_commands': ('sdist', 'bdist_wheel'),
         'dist_dir': 'dist',
         'use_hashes': 'yes',
+        'remotelock_paths': ':'.join((
+            os.path.basename(__file__),
+            '{}.cfg'.format(os.path.splitext(os.path.basename(__file__))[0]),
+            'setup.cfg',
+            'setup.py',
+            'requirements/*.in',
+        )),
     }
 
     def __init__(
@@ -683,6 +789,7 @@ class Configuration:
             dist_dir,
             use_hashes,
             platform,
+            remotelock_paths,
     ):
         self.project_root = project_root
         self.python_identifier = python_identifier
@@ -692,6 +799,7 @@ class Configuration:
         self.dist_commands = dist_commands
         self.use_hashes = use_hashes
         self.platform = platform
+        self.remotelock_paths = remotelock_paths
 
         self.requirements_path = requirements_path
         self.dot_env = dot_env
@@ -732,6 +840,8 @@ class Configuration:
 
         platform = get_platform()
 
+        remotelock_paths = tuple(c['remotelock_paths'].split(':'))
+
         return cls(
             project_root=c['project_root'],
             python_identifier=python_identifier,
@@ -748,6 +858,7 @@ class Configuration:
             dist_dir=c['dist_dir'],
             use_hashes=use_hashes,
             platform=platform,
+            remotelock_paths=remotelock_paths,
         )
 
     def resolved_dist_dir(self):
@@ -779,12 +890,29 @@ class Configuration:
 
 
 def main():
-    configuration = Configuration.from_setup_cfg(
-        path=os.path.join(
-            os.path.dirname(resolve_path(__file__)),
-            'setup.cfg',
-        ),
+    our_directory = os.path.dirname(resolve_path(__file__))
+
+    config_files = (
+        os.path.join(
+            our_directory,
+            '{}.cfg'.format(name),
+        )
+        for name in (
+            os.path.splitext(os.path.basename(__file__))[0],
+            'setup',
+        )
     )
+    for file_path in config_files:
+        if os.path.isfile(file_path):
+            configuration = Configuration.from_setup_cfg(
+                path=file_path,
+            )
+            break
+    else:
+        configuration = Configuration.from_dict(
+            d={},
+            reference_path=our_directory,
+        )
 
     parser = argparse.ArgumentParser(
         description='Create and manage the venv',
@@ -854,7 +982,9 @@ def main():
     resole_parser = add_subparser(
         subparsers,
         'resole',
-        description='Resole boots.py (self update)',
+        description='Resole {} (self update)'.format(
+            os.path.basename(__file__)
+        ),
     )
     resole_parser.add_argument(
         '--url',
@@ -897,6 +1027,13 @@ def main():
     )
     add_group_option(parser=pick_parser, default=configuration.default_group)
     pick_parser.set_defaults(func=pick)
+
+    remotelock_parser = add_subparser(
+        subparsers,
+        'remotelock',
+        description='Remotely lock',
+    )
+    remotelock_parser.set_defaults(func=remotelock)
 
     args = parser.parse_args()
 
