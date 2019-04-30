@@ -1,3 +1,5 @@
+--requirement pre.in
+
 attrs
 click
 python-can
