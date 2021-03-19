@@ -45,15 +45,15 @@ class Bus:
     async def linked(self):
         self.notifier.add_listener(self.listener)
 
-        self.incoming_send_channel, receive_channel = (
-            trio.open_memory_channel(self.receive_buffer_length)
-        )
+        try:
+            self.incoming_send_channel, receive_channel = (
+                trio.open_memory_channel(self.receive_buffer_length)
+            )
 
-        async with self.incoming_send_channel, receive_channel:
-            try:
-                yield receive_channel
-            finally:
-                self.notifier.remove_listener(self.listener)
+            async with self.incoming_send_channel, receive_channel:
+                    yield receive_channel
+        finally:
+            self.notifier.remove_listener(self.listener)
 
     async def _receive_in_trio(self, message):
         logging.debug(
