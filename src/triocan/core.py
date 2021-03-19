@@ -14,7 +14,7 @@ class Listener(can.Listener):
     callable = attr.ib()
 
     def __attrs_post_init__(self):
-        super(Listener, self).__init__()
+        super().__init__()
 
     def on_message_received(self, msg):
         self.callable(message=msg)
