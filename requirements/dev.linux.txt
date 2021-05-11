@@ -4,69 +4,112 @@
 #
 #    python boots.py lock
 #
+aenum==3.0.0 \
+    --hash=sha256:17cd8cfed1ee4b617198c9fabbabd70ebd8f01e54ac29cd6c3a92df14bd86656 \
+    --hash=sha256:58b899111b3fa9f9569e30c6305b07308f5b0dfdbbd2a9b9f01e8e08def7fdbb \
+    --hash=sha256:701c4fecd4c5237ed5ab80a18930a0ebe26a8c729a21e1b7302197a3f430da7c
+    # via python-can
 async-generator==1.10 \
     --hash=sha256:01c7bf666359b4967d2cda0000cc2e4af16a0ae098cbffcb8472fb9e8ad6585b \
-    --hash=sha256:6ebb3d106c12920aaae42ccb6f787ef5eefdcdd166ea3d628fa8476abe712144 \
+    --hash=sha256:6ebb3d106c12920aaae42ccb6f787ef5eefdcdd166ea3d628fa8476abe712144
     # via trio
-attrs==19.1.0 \
-    --hash=sha256:69c0dbf2ed392de1cb5ec704444b08a5ef81680a61cb899dc08127123af36a79 \
-    --hash=sha256:f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399
-certifi==2019.3.9 \
-    --hash=sha256:59b7658e26ca9c7339e00f8f4636cdfe59d34fa37b9b04f6f9e9926b3cece1a5 \
-    --hash=sha256:b26104d6835d1f5e49452a26eb2ff87fe7090b89dfcaee5ea2212697e1e1d7ae \
+attrs==21.2.0 \
+    --hash=sha256:149e90d6d8ac20db7a955ad60cf0e6881a3f20d37096140088356da6c716b0b1 \
+    --hash=sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb
+    # via
+    #   -r /home/vsts/work/1/s/work/requirements/base.in
+    #   outcome
+    #   trio
+certifi==2020.12.5 \
+    --hash=sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c \
+    --hash=sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830
     # via requests
-chardet==3.0.4 \
-    --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
-    --hash=sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691 \
+chardet==4.0.0 \
+    --hash=sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa \
+    --hash=sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5
     # via requests
-click==7.0 \
-    --hash=sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13 \
-    --hash=sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7
+click==7.1.2 \
+    --hash=sha256:d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a \
+    --hash=sha256:dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc
+    # via
+    #   -r /home/vsts/work/1/s/work/requirements/base.in
+    #   gitignoreio
+    #   pip-tools
+    #   romp
 gitignoreio==0.1.5 \
     --hash=sha256:dd0ab3cc32a3e5aa874677735e3d9962b2009b3376efd644be85b2a7f127d66b
-idna==2.8 \
-    --hash=sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407 \
-    --hash=sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c \
-    # via requests, trio
-outcome==1.0.0 \
-    --hash=sha256:7357af9ba2a08fdff8c742818909c5d146fc1fe75aee4bddadaa4f8ad726d262 \
-    --hash=sha256:9d58c05db36a900ce60c6da0167d76e28869f64b338d60fa3a61841cfa54ac71 \
+    # via -r /home/vsts/work/1/s/work/requirements/dev.in
+idna==2.10 \
+    --hash=sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6 \
+    --hash=sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0
+    # via
+    #   requests
+    #   trio
+importlib-metadata==4.0.1 \
+    --hash=sha256:8c501196e49fb9df5df43833bdb1e4328f64847763ec8a50703148b73784d581 \
+    --hash=sha256:d7eb1dea6d6a6086f8be21784cc9e3bcfa55872b52309bc5fad53a8ea444465d
+    # via pep517
+outcome==1.1.0 \
+    --hash=sha256:c7dd9375cfd3c12db9801d080a3b63d4b0a261aa996c4c13152380587288d958 \
+    --hash=sha256:e862f01d4e626e63e8f92c38d1f8d5546d3f9cce989263c521b2e7990d186967
     # via trio
-pip-tools==3.6.1 \
-    --hash=sha256:603d374e43bfa02e7a775b58c25a203799155d42f89ef94ee445eb7ae116439f \
-    --hash=sha256:7c52bd17e8b8003a0d8daf5ac6e98c38097223508993fefb440c7e333a09f345
-python-can==3.1.1 \
-    --hash=sha256:7c57ad72bd1f7d1aca3756a852f5d5bd9926073310ec0ba09f0b3b67b5afe4dd \
-    --hash=sha256:99c06d05f8aa6fa9a84f39a11987c303c030411c3280e39bef0b5cd2242ad09f
-requests==2.21.0 \
-    --hash=sha256:502a824f31acdacb3a35b6690b5fbf0bc41d63a24a45c4004352b0242707598e \
-    --hash=sha256:7bf2a778576d825600030a110f3c0e3e8edc51dfaafe1c146e39a2027784957b \
-    # via gitignoreio, romp
-romp==2019.4.1 \
-    --hash=sha256:1ca42eff5dac16df266e70e8108be05276bd072cbd290cfc6facf6b9c73a1801
-six==1.12.0 \
-    --hash=sha256:3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c \
-    --hash=sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73 \
+pep517==0.10.0 \
+    --hash=sha256:ac59f3f6b9726a49e15a649474539442cf76e0697e39df4869d25e68e880931b \
+    --hash=sha256:eba39d201ef937584ad3343df3581069085bacc95454c80188291d5b3ac7a249
     # via pip-tools
-sniffio==1.1.0 \
-    --hash=sha256:20ed6d5b46f8ae136d00b9dcb807615d83ed82ceea6b2058cecb696765246da5 \
-    --hash=sha256:8e3810100f69fe0edd463d02ad407112542a11ffdc29f67db2bf3771afb87a21 \
+pip-tools==6.1.0 \
+    --hash=sha256:197e3f8839095ccec3ad1ef410e0804c07d9f17dff1c340fb417ca2b63feacc9 \
+    --hash=sha256:400bf77e29cca48c31abc210042932bb52dcc138ef4ea4d52c5db429aa8ae6ee
+    # via -r /home/vsts/work/1/s/work/requirements/pre.in
+python-can==3.3.4 \
+    --hash=sha256:2d3c223b7adc4dd46ce258d4a33b7e0dbb6c339e002faa40ee4a69d5fdce9449
+    # via -r /home/vsts/work/1/s/work/requirements/base.in
+requests==2.25.1 \
+    --hash=sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804 \
+    --hash=sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e
+    # via
+    #   gitignoreio
+    #   romp
+romp==2020.12 \
+    --hash=sha256:05e281d3aaba3a27a4402fb5de6876f549c152fc9f853448b6090dcdced58672 \
+    --hash=sha256:60cf6afb607103b7039b82a53fc8d796cb01dcaa08146c832c0d8940d81bb0f1
+    # via -r /home/vsts/work/1/s/work/requirements/pre.in
+sniffio==1.2.0 \
+    --hash=sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663 \
+    --hash=sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de
     # via trio
-sortedcontainers==2.1.0 \
-    --hash=sha256:974e9a32f56b17c1bac2aebd9dcf197f3eb9cd30553c5852a3187ad162e1a03a \
-    --hash=sha256:d9e96492dd51fae31e60837736b38fe42a187b5404c16606ff7ee7cd582d4c60 \
+sortedcontainers==2.3.0 \
+    --hash=sha256:37257a32add0a3ee490bb170b599e93095eed89a55da91fa9f48753ea12fd73f \
+    --hash=sha256:59cc937650cf60d677c16775597c89a960658a09cf7c1a668f86e1e4464b10a1
     # via trio
-trio==0.11.0 \
-    --hash=sha256:3796774aedbf5be581c68f98c79b565654876de6e9a01c6a95e3ec6cd4e4b4c3 \
-    --hash=sha256:b0c03d312c300a947e54e204be88255992434e824374b7d3cc886876dab9a542
-urllib3==1.24.2 \
-    --hash=sha256:4c291ca23bbb55c76518905869ef34bdd5f0e46af7afe6861e8375643ffee1a0 \
-    --hash=sha256:9a247273df709c4fedb38c711e44292304f73f39ab01beda9f6b9fc375669ac3 \
+toml==0.10.2 \
+    --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
+    --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
+    # via pep517
+trio==0.18.0 \
+    --hash=sha256:87a66ae61f27fe500c9024926a9ba482c07e1e0f56380b70a264d19c435ba076 \
+    --hash=sha256:a42af0634ba729cbfe8578be058750c6471dac19fbc7167ec6a3ca3f966fb424
+    # via -r /home/vsts/work/1/s/work/requirements/base.in
+typing-extensions==3.10.0.0 \
+    --hash=sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497 \
+    --hash=sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342 \
+    --hash=sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84
+    # via importlib-metadata
+urllib3==1.26.4 \
+    --hash=sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df \
+    --hash=sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937
     # via requests
-wrapt==1.11.1 \
-    --hash=sha256:4aea003270831cceb8a90ff27c4031da6ead7ec1886023b80ce0dfe0adf61533 \
+wrapt==1.12.1 \
+    --hash=sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7
     # via python-can
+zipp==3.4.1 \
+    --hash=sha256:3607921face881ba3e026887d8150cca609d517579abe052ac81fc5aeffdbd76 \
+    --hash=sha256:51cb66cc54621609dd593d1787f286ee42a5c0adbb4b29abea5a63edc3e03098
+    # via
+    #   importlib-metadata
+    #   pep517
 
-# The following packages are considered to be unsafe in a requirements file:
+# WARNING: The following packages were not pinned, but pip requires them to be
+# pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
 # pip
 # setuptools
