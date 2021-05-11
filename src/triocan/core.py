@@ -25,15 +25,13 @@ class Bus:
     bus = attr.ib(default=None)
     notifier = attr.ib(default=None)
     listener = attr.ib(default=None)
-    portal = attr.ib(default=None)
     incoming_send_channel = attr.ib(default=None)
     receive_buffer_length = attr.ib(default=0)
 
     @classmethod
-    def build(cls, bus, portal, receive_buffer_length=100):
+    def build(cls, bus, receive_buffer_length=100):
         self = cls(
             bus=bus,
-            portal=portal,
             receive_buffer_length=receive_buffer_length,
         )
         self.listener = Listener(callable=self._receive_in_thread)
@@ -64,7 +62,7 @@ class Bus:
         await self.incoming_send_channel.send(message)
 
     def _receive_in_thread(self, message):
-        self.portal.run(self._receive_in_trio, message)
+        trio.from_thread.run(self._receive_in_trio, message)
 
     async def send(self, message):
-        await trio.run_sync_in_worker_thread(self.bus.send, message)
+        await trio.to_thread.run_sync(self.bus.send, message)
