@@ -26,9 +26,7 @@ def main():
 async def async_main():
     can_bus = can.interface.Bus(bustype='socketcan', channel='can0')
 
-    portal = trio.BlockingTrioPortal()
-
-    triocan_bus = triocan.Bus.build(bus=can_bus, portal=portal)
+    triocan_bus = triocan.Bus.build(bus=can_bus)
 
     async with triocan_bus.linked() as receive_channel:
         async with trio.open_nursery() as nursery:
