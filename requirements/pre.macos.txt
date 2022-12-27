@@ -69,7 +69,7 @@ pip==21.1.1 \
     # via
     #   -r /Users/runner/work/1/s/work/requirements/pre.in
     #   pip-tools
-setuptools==56.2.0 \
-    --hash=sha256:7bb5652625e94e73b9358b7ed8c6431b732e80cf31f4e0972294c64f0e5b849e \
-    --hash=sha256:bc30153eec47d82f20c6f5e1a13d4ee725c6deb7013a67557f89bfe5d25235c4
+setuptools==65.5.1 \
+    --hash=sha256:d0b9a8433464d5800cbe05094acf5c6d52a91bfac9b52bcfc4d41382be5d5d31 \
+    --hash=sha256:e197a19aa8ec9722928f2206f8de752def0e4c9fc6953527360d1c36d94ddb2f
     # via -r /Users/runner/work/1/s/work/requirements/pre.in
